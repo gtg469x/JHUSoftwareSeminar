@@ -1,0 +1,18 @@
+body{
+	background-color:rgb(243,247,254);
+	
+}
+
+h1{
+	color:rgb(75,75,100);
+	font-variant:small-caps;
+}
+
+legend{
+	font-style:italic;
+	font-size:16px;
+}
+
+p{
+	font-family:"book antiqua";
+}

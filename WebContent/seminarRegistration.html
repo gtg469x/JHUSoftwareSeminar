@@ -1,0 +1,56 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+   "http://www.w3.org/TR/html4/loose.dtd">
+
+<html lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<link rel="stylesheet" type="text/css" href="jhuStyle.css">
+	<title>JHU Development Seminar Registration</title>
+	<!-- Date: 2012-09-14 -->
+	<img src="pics/jhuLogo.jpg">
+</head>
+<body>
+	<h1>Johns Hopkins Annual Software Development Seminar</h1>
+	<form action="registrationCosts.jsp" method="GET">
+		<fieldset>
+			<legend>Contact Information</legend>
+			<table>
+				<tr>
+					<td>Name:</td>
+					<td><input type="text" name="name"/></td>
+				</tr>
+				<tr>
+					<td>Email:</td>
+					<td><input type="text" name="email"/></td>
+				</tr>
+
+			</table>
+		</fieldset>
+		<fieldset>
+			<legend>Select your courses</legend>
+			<select name="courseListings" multiple size="6">
+				<option value="a1">A1 - Web Services</option>
+				<option value="a2">A2 - J2EE Design Patterns</option>
+				<option value="a3">A3 - Service Oriented Architecture</option>
+				<option value="a4">A4 - Enterprise Service Bus</option>
+				<option value="a5">A5 - Web Services Security</option>
+				<option value="a6">A6 - Secure Messaging</option>
+			</select>
+		</fieldset>
+		<fieldset>
+			<legend>Employment Status</legend>
+			<input type="radio" name="empStatus" value="jhuEmp"/>JHU Employee
+			<input type="radio" name="empStatus" value="jhuStud"/>JHU Student
+			<input type="radio" name="empStatus" value="speaker"/>Speaker
+			<input type="radio" name="empStatus" value="other"/>Other
+		</fieldset>
+		<fieldset>
+			<legend>Additional Fees and Charges</legend>
+			<input type="checkbox" name="fees" value="hotel"/>Hotel Accommodation (Conference Guest Special Fee - Parking Included)<br>
+			<input type="checkbox" name="fees" value="parking"/>Parking Permit<br>
+		</fieldset>
+		<input type="submit" value="Compute Seminar Costs"/>
+		<input type="reset" value="Cancel"/>
+		</form>
+</body>
+</html>
