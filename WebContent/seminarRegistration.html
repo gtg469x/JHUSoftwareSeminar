@@ -11,7 +11,7 @@
 </head>
 <body>
 	<h1>Johns Hopkins Annual Software Development Seminar</h1>
-	<form action="registrationCosts.jsp" method="GET">
+	<form action="SeminarController" method="GET">
 		<fieldset>
 			<legend>Contact Information</legend>
 			<table>
@@ -29,12 +29,12 @@
 		<fieldset>
 			<legend>Select your courses</legend>
 			<select name="courseListings" multiple size="6">
-				<option value="a1">A1 - Web Services</option>
-				<option value="a2">A2 - J2EE Design Patterns</option>
-				<option value="a3">A3 - Service Oriented Architecture</option>
-				<option value="a4">A4 - Enterprise Service Bus</option>
-				<option value="a5">A5 - Web Services Security</option>
-				<option value="a6">A6 - Secure Messaging</option>
+				<option value="A1 - Web Services">A1 - Web Services</option>
+				<option value="A2 - J2EE Design Patterns">A2 - J2EE Design Patterns</option>
+				<option value="A3 - Service Oriented Architecture">A3 - Service Oriented Architecture</option>
+				<option value="A4 - Enterprise Service Bus">A4 - Enterprise Service Bus</option>
+				<option value="A5 - Web Services Security">A5 - Web Services Security</option>
+				<option value="A6 - Secure Messaging">A6 - Secure Messaging</option>
 			</select>
 		</fieldset>
 		<fieldset>
@@ -46,8 +46,8 @@
 		</fieldset>
 		<fieldset>
 			<legend>Additional Fees and Charges</legend>
-			<input type="checkbox" name="fees" value="hotel"/>Hotel Accommodation (Conference Guest Special Fee - Parking Included)<br>
-			<input type="checkbox" name="fees" value="parking"/>Parking Permit<br>
+			<input type="checkbox" name="hotel" value="hotel"/>Hotel Accommodation (Conference Guest Special Fee - Parking Included)<br>
+			<input type="checkbox" name="parking" value="parking"/>Parking Permit<br>
 		</fieldset>
 		<input type="submit" value="Compute Seminar Costs"/>
 		<input type="reset" value="Cancel"/>
