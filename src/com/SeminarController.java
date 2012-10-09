@@ -1,5 +1,6 @@
 package com;
 
+import registration.RegCostBean;
 import registration.Register;
 
 import java.io.IOException;
@@ -98,11 +99,24 @@ public class SeminarController extends HttpServlet {
 	        
 	        Register regUser = new Register(name, email, status);
 	        regUser.calculateCourseFees(courses);
-	        regUser.calculateTotalFees(courses, hotel, parking);
+	       
+	        
+	        RegCostBean rcb = new RegCostBean();
+	        rcb.setCourses(courses);
+	        rcb.setEmail(email);
+	        rcb.setHotelFee(regUser.calculateHotelFee());
+	        rcb.setParkingFee(regUser.calculateParkingFee());
+	        rcb.setTotalCost(regUser.calculateTotalFees(courses, hotel, parking));
+	        rcb.setIndividualCost(regUser.calculateIndividualCourseCost());
+	        rcb.setRegistrationType(status);
+	        rcb.setWelcomeName(name);
 	        
 	        session.setAttribute("coursesLength", courses.length);
-	      
-	        
+	        session.setAttribute("rcb", rcb);
+	        session.setAttribute("coursesArray", courses);
+	        session.setAttribute("individualCourseCost", rcb.getIndividualCost());
+	        session.setAttribute("hotelFee", rcb.getHotelFee());
+	        session.setAttribute("parkingFee", rcb.getParkingFee());
 	    	
 	        RequestDispatcher dispatcher = servletContext.getRequestDispatcher("/registrationCosts.jsp");
 	    	dispatcher.forward(request, response);

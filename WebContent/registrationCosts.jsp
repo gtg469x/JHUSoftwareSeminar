@@ -24,17 +24,17 @@ Your email confirmation will be sent to: <b><jsp:getProperty name="rcb" property
 <table frame="below" width="400" rules="rows">
 <tr><td align="center"><i><b>Your Courses</b></i></td><td align="right"><i><b>Costs</b></i></td></tr>
 <%
-/*
-for(int i=0; i<Integer.parseInt((String) session.getAttribute("coursesLength")); i++){
-	out.println("<tr><td>"+courses[i]+"\t</td><td align=\"right\">\t$"++"</td></tr>");
+String [] coursesList = rcb.getCourses();
+for(int i=0; i<coursesList.length; i++){
+	//out.println("<tr><td>"+coursesList[i]+"</td></tr>");
+	out.println("<tr><td>"+coursesList[i]+"\t</td><td align=\"right\">\t$"+session.getAttribute("individualCourseCost")+"</td></tr>");
 }
-if(parking){
-	out.println("<tr><td>"+"Parking Fees"+"\t</td><td align=\"right\">\t$"+regUser.calculateParkingFee()+"</td></tr>");
+if(rcb.getParkingFee()!=0.0){
+	out.println("<tr><td>"+"Parking Fees"+"\t</td><td align=\"right\">\t$"+session.getAttribute("parkingFee")+"</td></tr>");
 }
-if(hotel){
-	out.println("<tr><td>"+"Hotel Accommodations"+"\t</td><td align=\"right\">\t$"+regUser.calculateHotelFee()+"</td></tr>");
+if(rcb.getHotelFee()!=0.0){
+	out.println("<tr><td>"+"Hotel Accommodations"+"\t</td><td align=\"right\">\t$"+session.getAttribute("hotelFee")+"</td></tr>");
 }
-*/
 
 %>	
 	<tr><td align="right"><b>Total:</b></td><td align="right"><b>$<jsp:getProperty name="rcb" property="totalCost"/></b></td></tr>

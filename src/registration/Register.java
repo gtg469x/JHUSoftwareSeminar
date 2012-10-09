@@ -20,15 +20,8 @@ public class Register implements Serializable {
 	
 	public Register(String userName, String userEmail, String userStatus){
 		registerUser = new User(userName, userEmail, userStatus);
-		rcb = new RegCostBean();
 		charges = new Fees();
 		totalCost=0;
-		
-		setRegType();
-		setWelcomeName();
-		setFees();
-		confirmationEmail();
-		setIndividualCourseCost();
 		
 	}
 	
@@ -60,12 +53,8 @@ public class Register implements Serializable {
 		return charges.getHotelFee();
 	}
 	
-	public synchronized void setFees(){
-		rcb.setHotelFee(charges.getHotelFee());
-		rcb.setParkingFee(charges.getParkingFee());
-	}
 	
-	public synchronized void calculateTotalFees(String [] courses, boolean hotel, boolean parking){
+	public synchronized double calculateTotalFees(String [] courses, boolean hotel, boolean parking){
 		if(hotel&&parking){
 			totalCost = calculateHotelFee()+calculateCourseFees(courses)+calculateParkingFee();
 		}else if(hotel&&!parking){
@@ -75,22 +64,11 @@ public class Register implements Serializable {
 		}else{
 			totalCost=calculateCourseFees(courses);
 		}
-			rcb.setTotalCost(totalCost);
+			return totalCost; //rcb.setTotalCost(totalCost);
 	}
 	
-	private synchronized void setRegType(){
-		rcb.setRegistrationType(registerUser.getUserStatus());
-	}
-		
-	private synchronized void confirmationEmail(){
-		rcb.setEmail(registerUser.getUserEmail());
-	}
-	
-	private synchronized void setWelcomeName(){
-		rcb.setWelcomeName(registerUser.getUserName());
-	}
 
-	private synchronized void setIndividualCourseCost(){
+	public synchronized double calculateIndividualCourseCost(){
 		if(registerUser.isEmployee()){
 			individualCourseCost = charges.getCourseEmployeeFee();
 		}else if(registerUser.isStudent()){
@@ -100,7 +78,7 @@ public class Register implements Serializable {
 		}else{
 			individualCourseCost=charges.getCourseOtherFee();
 		}
-		rcb.setIndividualCost(individualCourseCost);
+		return individualCourseCost;//rcb.setIndividualCost(individualCourseCost);
 	}	
 	
 }
