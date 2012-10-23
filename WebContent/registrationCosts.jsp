@@ -21,27 +21,20 @@ You are registered as a <b><jsp:getProperty name="rcb" property="registrationTyp
 Your email confirmation will be sent to: <b><jsp:getProperty name="rcb" property="email"/></b>
 <br>
 <br>
-<table frame="below" width="400" rules="rows">
-<tr><td align="center"><i><b>Your Courses</b></i></td><td align="right"><i><b>Costs</b></i></td></tr>
-<%
-String [] coursesList = rcb.getCourses();
-for(int i=0; i<coursesList.length; i++){
-	//out.println("<tr><td>"+coursesList[i]+"</td></tr>");
-	out.println("<tr><td>"+coursesList[i]+"\t</td><td align=\"right\">\t$"+session.getAttribute("individualCourseCost")+"</td></tr>");
-}
-if(rcb.getParkingFee()!=0.0){
-	out.println("<tr><td>"+"Parking Fees"+"\t</td><td align=\"right\">\t$"+session.getAttribute("parkingFee")+"</td></tr>");
-}
-if(rcb.getHotelFee()!=0.0){
-	out.println("<tr><td>"+"Hotel Accommodations"+"\t</td><td align=\"right\">\t$"+session.getAttribute("hotelFee")+"</td></tr>");
-}
 
-%>	
-	<tr><td align="right"><b>Total:</b></td><td align="right"><b>$<jsp:getProperty name="rcb" property="totalCost"/></b></td></tr>
-</table>
+<jsp:include page="courseCostListing.jsp"/>
 
-<form action="seminarRegistration.html" method="get">
-  <input type="submit" value="Back">
+<form action="SeminarController" method="get">
+<input type="hidden" name="formType" value="edit"/>
+<input type="submit" value="Edit Information or Add Courses"/>
+</form>  
+
+<form action="SeminarController" method="get">
+<input type="hidden" name="formType" value="confirm"/>
+<input type="submit" value="Confirm Registration"/>
 </form>
+
+ <!-- <input type="submit" value="Back">-->
+
 </body>
 </html>

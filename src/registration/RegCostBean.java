@@ -1,6 +1,7 @@
 package registration;
 
 import java.io.Serializable;
+import java.util.*;
 
 public class RegCostBean implements Serializable {
 	
@@ -10,15 +11,28 @@ public class RegCostBean implements Serializable {
 	double parkingFee;
 	String welcomeName;
 	String email;
-	String [] courses;
+	List<String> courses;
 	String registrationType;
 	
 	public RegCostBean(){
 		//no argument constructor for java bean
+
+
 	}
 
 	public synchronized double getTotalCost() {
 		return totalCost;
+	}
+	
+	public synchronized void adjustCourseList(String removeCourse, List courseList){
+		int index = Integer.parseInt(removeCourse);
+		courses = courseList;
+		System.out.println(courses.size());
+/*		for(String course:courses){
+			System.out.println(course);
+		}
+*/
+		courses.remove(index);
 	}
 
 	public synchronized void setTotalCost(double totalCost) {
@@ -65,12 +79,15 @@ public class RegCostBean implements Serializable {
 		this.email = email;
 	}
 
-	public synchronized String[] getCourses() {
+	public synchronized List getCourses() {
 		return courses;
 	}
 
-	public synchronized void setCourses(String[] courses) {
-		this.courses = courses;
+	public synchronized void setCourses(String[] coursesArray) {
+		courses = new ArrayList();
+		for(int i = 0; i< coursesArray.length; i++){
+			courses.add(coursesArray[i]);
+		}
 	}
 
 	public synchronized String getRegistrationType() {
