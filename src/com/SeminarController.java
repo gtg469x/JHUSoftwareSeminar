@@ -15,6 +15,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.*;
+import javax.mail.*;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 
 /**
  * Servlet implementation class SeminarController
@@ -44,6 +47,7 @@ public class SeminarController extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
+		processRequest(request, response);
 	}
 	
 	protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
@@ -134,24 +138,96 @@ public class SeminarController extends HttpServlet {
         		// do something.
         		RequestDispatcher dispatcher = servletContext.getRequestDispatcher("/seminarRegistration.jsp");
         		dispatcher.forward(request, response);
-        }else if(request.getParameter("formType").equals("confirm")){
+        }else if(request.getParameter("formType").equals("confirmPayment")){
+        	//send an email
+        	try{
+        		rcb = (RegCostBean)session.getAttribute("rcb");
+        		
+        		Properties prop = new Properties();
+        		
+        		prop.put("mail.transport.protocol", "smtp");
+        		prop.put("mail.smtp.host", "smtp.johnshopkins.edu");
+        		prop.put("mail.smtp.port", 25);
+        		
+        		/*
+        		prop.put("mail.transport.protocol", "smtps");
+        		prop.put("mail.smtps.host", "smtp.gmail.com");
+        		prop.put("mail.smtps.port", 465);
+        		prop.put("mail.smtps.auth", "true");
+        		prop.put("mail.smtps.quitwait", "false");
+        		*/
+        		Session sess = Session.getDefaultInstance(prop);
+        		sess.setDebug(true);
+        		
+        		
+        		Message message = new MimeMessage(sess);
+        		message.setSubject("JHU Software Seminar Confirmation email");
+        		message.setText("Thank you for registering.  This is to confirm your registration");
+        		
+        		
+        		Address fromAddress = new InternetAddress("kcaldw11@jhu.edu");
+        		Address toAddress = new InternetAddress(rcb.getEmail());
+        		message.setFrom(fromAddress);
+        		message.setRecipient(Message.RecipientType.TO, toAddress);
+        		/*
+        		Transport transport = sess.getTransport();
+        		transport.sendMessage(message, message.getAllRecipients());
+        		transport.close();
+        		*/
+        		Transport.send(message);
+        		
+        		RequestDispatcher dispatcher = servletContext.getRequestDispatcher("/confirmation.jsp");
+		    	dispatcher.forward(request, response);
+        		
+        	}catch(MessagingException e){
+        		//do something else
+        		log(e.toString());
+        		RequestDispatcher dispatcher = servletContext.getRequestDispatcher("/registrationError.jsp");
+		    	dispatcher.forward(request, response);
+        	}
+        	
         	//do something.
         	/// do what we do if they need to edit their information apart from "removing" a class
         }else if(request.getParameter("formType").equals("tableListingPage")){
         	rcb = (RegCostBean)session.getAttribute("rcb");
         	session.getAttribute("coursesList");
-        	rcb.adjustCourseList((String)request.getParameter("removeCourse"), (List)session.getAttribute("coursesList"));
-        	session.setAttribute("coursesList", rcb.getCourses());
-        	
-        	double updatedCost = rcb.getTotalCost() - rcb.getIndividualCost();
-        	rcb.setTotalCost(updatedCost);	
-	        session.setAttribute("totalCost", rcb.getTotalCost());
-        	
-        	RequestDispatcher dispatcher = servletContext.getRequestDispatcher("/registrationCosts.jsp");
-	    	dispatcher.forward(request, response);
+        	try{
+        		rcb.adjustCourseList((String)request.getParameter("removeCourse"), (List)session.getAttribute("coursesList"));
+	        	session.setAttribute("coursesList", rcb.getCourses());
+	        	
+	        	double updatedCost = rcb.getTotalCost() - rcb.getIndividualCost();
+	        	rcb.setTotalCost(updatedCost);	
+		        session.setAttribute("totalCost", rcb.getTotalCost());
+        	}catch (NullPointerException npe){
+        		//do nothing
+        	}finally{
+
+	        	
+	        	RequestDispatcher dispatcher = servletContext.getRequestDispatcher("/registrationCosts.jsp");
+		    	dispatcher.forward(request, response);
+        	}
         	
         	/// do what we do if they need to edit their information apart from "removing" a class
-        }else{
+        }else if(request.getParameter("formType").equals("confirm")){
+        	response.sendRedirect(response.encodeRedirectURL("https://localhost:8443/JHUSoftwareSeminar/checkout.jsp"));
+        }else if(request.getParameter("formType").equals("payment")){
+        	
+    		String creditType = request.getParameter("credit");
+    		String creditDate = request.getParameter("ccExpDate");
+    		String creditNum = request.getParameter("ccNum");
+    		String errMessage = " ";
+    		
+    		if(creditType == null || creditDate == "" || creditNum == ""){
+    			errMessage = "Please input values for Credit Expiration Date and Credit Card Number";
+    			session.setAttribute("payError", errMessage);
+    			response.sendRedirect(response.encodeRedirectURL("https://localhost:8443/JHUSoftwareSeminar/checkout.jsp"));
+    		}else{
+    			RequestDispatcher dispatcher = servletContext.getRequestDispatcher("/confirmation.jsp");
+    	    	dispatcher.forward(request, response);
+    		}
+    		
+    	}
+        else{
         	RequestDispatcher dispatcher = servletContext.getRequestDispatcher("/registrationError.jsp");
         	dispatcher.forward(request, response);
         }
