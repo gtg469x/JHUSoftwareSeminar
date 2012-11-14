@@ -140,6 +140,7 @@ public class SeminarController extends HttpServlet {
         		dispatcher.forward(request, response);
         }else if(request.getParameter("formType").equals("confirmPayment")){
         	//send an email
+        	/*
         	try{
         		rcb = (RegCostBean)session.getAttribute("rcb");
         		
@@ -149,13 +150,7 @@ public class SeminarController extends HttpServlet {
         		prop.put("mail.smtp.host", "smtp.johnshopkins.edu");
         		prop.put("mail.smtp.port", 25);
         		
-        		/*
-        		prop.put("mail.transport.protocol", "smtps");
-        		prop.put("mail.smtps.host", "smtp.gmail.com");
-        		prop.put("mail.smtps.port", 465);
-        		prop.put("mail.smtps.auth", "true");
-        		prop.put("mail.smtps.quitwait", "false");
-        		*/
+        		
         		Session sess = Session.getDefaultInstance(prop);
         		sess.setDebug(true);
         		
@@ -169,11 +164,7 @@ public class SeminarController extends HttpServlet {
         		Address toAddress = new InternetAddress(rcb.getEmail());
         		message.setFrom(fromAddress);
         		message.setRecipient(Message.RecipientType.TO, toAddress);
-        		/*
-        		Transport transport = sess.getTransport();
-        		transport.sendMessage(message, message.getAllRecipients());
-        		transport.close();
-        		*/
+
         		Transport.send(message);
         		
         		RequestDispatcher dispatcher = servletContext.getRequestDispatcher("/confirmation.jsp");
@@ -185,7 +176,7 @@ public class SeminarController extends HttpServlet {
         		RequestDispatcher dispatcher = servletContext.getRequestDispatcher("/registrationError.jsp");
 		    	dispatcher.forward(request, response);
         	}
-        	
+        	*/
         	//do something.
         	/// do what we do if they need to edit their information apart from "removing" a class
         }else if(request.getParameter("formType").equals("tableListingPage")){
@@ -209,7 +200,9 @@ public class SeminarController extends HttpServlet {
         	
         	/// do what we do if they need to edit their information apart from "removing" a class
         }else if(request.getParameter("formType").equals("confirm")){
-        	response.sendRedirect(response.encodeRedirectURL("https://localhost:8443/JHUSoftwareSeminar/checkout.jsp"));
+        	String errMessage = " ";
+        	session.setAttribute("payError", errMessage);
+        	response.sendRedirect(response.encodeRedirectURL("https://cybil.jhu.edu:8443/kcaldw11/checkout.jsp"));
         }else if(request.getParameter("formType").equals("payment")){
         	
     		String creditType = request.getParameter("credit");
@@ -220,12 +213,56 @@ public class SeminarController extends HttpServlet {
     		if(creditType == null || creditDate == "" || creditNum == ""){
     			errMessage = "Please input values for Credit Expiration Date and Credit Card Number";
     			session.setAttribute("payError", errMessage);
-    			response.sendRedirect(response.encodeRedirectURL("https://localhost:8443/JHUSoftwareSeminar/checkout.jsp"));
+    			response.sendRedirect(response.encodeRedirectURL("https://cybil.jhu.edu:8443/kcaldw11/checkout.jsp"));
     		}else{
-    			RequestDispatcher dispatcher = servletContext.getRequestDispatcher("/confirmation.jsp");
-    	    	dispatcher.forward(request, response);
+            	try{
+            		rcb = (RegCostBean)session.getAttribute("rcb");
+            		
+            		Properties prop = new Properties();
+            		
+            		prop.put("mail.transport.protocol", "smtp");
+            		prop.put("mail.smtp.host", "smtp.johnshopkins.edu");
+            		prop.put("mail.smtp.port", 25);
+            		
+            		/*
+            		prop.put("mail.transport.protocol", "smtps");
+            		prop.put("mail.smtps.host", "smtp.gmail.com");
+            		prop.put("mail.smtps.port", 465);
+            		prop.put("mail.smtps.auth", "true");
+            		prop.put("mail.smtps.quitwait", "false");
+            		*/
+            		Session sess = Session.getDefaultInstance(prop);
+            		sess.setDebug(true);
+            		
+            		
+            		Message message = new MimeMessage(sess);
+            		message.setSubject("JHU Software Seminar Confirmation email");
+            		message.setText("Thank you for registering.  This is to confirm your registration");
+            		
+            		
+            		Address fromAddress = new InternetAddress("kcaldw11@jhu.edu");
+            		Address toAddress = new InternetAddress(rcb.getEmail());
+            		message.setFrom(fromAddress);
+            		message.setRecipient(Message.RecipientType.TO, toAddress);
+            		/*
+            		Transport transport = sess.getTransport();
+            		transport.sendMessage(message, message.getAllRecipients());
+            		transport.close();
+            		*/
+            		Transport.send(message);
+            		
+            		RequestDispatcher dispatcher = servletContext.getRequestDispatcher("/confirmation.jsp");
+    		    	dispatcher.forward(request, response);
+            		
+            	}catch(MessagingException e){
+            		//do something else
+            		log(e.toString());
+            		RequestDispatcher dispatcher = servletContext.getRequestDispatcher("/registrationError.jsp");
+    		    	dispatcher.forward(request, response);
+            	}
+            	
     		}
-    		
+
     	}
         else{
         	RequestDispatcher dispatcher = servletContext.getRequestDispatcher("/registrationError.jsp");

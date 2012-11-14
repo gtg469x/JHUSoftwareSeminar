@@ -38,7 +38,7 @@ You are registered as a <b><jsp:getProperty name="rcb" property="registrationTyp
 				<td><input type="text" name="ccExpDate"></td>
 			</tr>
 		</table>
-		<input type="hidden" name="errMessage" id="errMessage" value="<%=session.getAttribute("errMessage") %>" />
+		<input type="hidden" name="errMessage" id="errMessage" value="<%=(String)session.getAttribute("payError") %>" />
 		<input type="hidden" name="formType" value="payment">
 		<input type="submit" value="Submit for Final Confirmation"/>	
 	</form>
